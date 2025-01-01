@@ -1,6 +1,6 @@
-# Azure Functions on Hono & Bun.js
+# Azure Functions on Bun.js
 
-Example for running Azure Functions on Hono & Bun.js
+Example for running Azure Functions on Bun.js
 
 ## Features
 - Run TypeScript without compile

@@ -1,30 +1,16 @@
-import { Hono } from "hono";
-import { Serve } from "bun";
-
-const app = new Hono().basePath("/api");
-
-app.get("/SimpleHttpTrigger", (c) => {
-  const currentDate = new Date();
-  console.log(currentDate.getMonth() + 1); // Months are 0-indexed in JS
-  console.log(currentDate.getDate());
-  console.log(currentDate.getFullYear());
-
-  const userAgent = c.req.header("user-agent");
-  console.log(`user agent is: ${userAgent}`);
-
-  const invocationId = c.req.header("x-azure-functions-invocationid");
-  console.log(`invocationid is: ${invocationId}`);
-
-  return c.text("Hello World from go worker xxx");
-  // return c.html("<h1>Hello World from go worker</h1>");
+Bun.serve({
+  port: parseInt(process.env.FUNCTIONS_CUSTOMHANDLER_PORT || "4000"),
+  fetch(req) {
+    const url = new URL(req.url);
+    if (url.pathname === "/api/SimpleHttpTrigger") {
+      const userAgent = req.headers.get("user-agent");
+      console.log(`user agent is: ${userAgent}`);
+    
+      const invocationId = req.headers.get("x-azure-functions-invocationid");
+      console.log(`invocationid is: ${invocationId}`);
+    
+      return new Response("Hello World from Bun");
+    } 
+    return new Response("404!");
+  },
 });
-
-const PORT = parseInt(process.env.FUNCTIONS_CUSTOMHANDLER_PORT || "4000");
-
-console.log(`Node.js/Express server listening on port ${PORT}`);
-
-export default {
-  fetch: app.fetch,
-  port: PORT,
-} satisfies Serve;
-
