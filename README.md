@@ -7,7 +7,9 @@ Example for running Azure Functions on Bun.js
 - Auto Reload on save
 
 ```bash
-func start
+cd bun-serve
+bun install
+bun dev
 ```
 
 ## Ref
