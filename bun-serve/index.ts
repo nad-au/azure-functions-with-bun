@@ -5,7 +5,7 @@ Bun.serve({
   port,
   fetch(req) {
     const url = new URL(req.url);
-    if (url.pathname === "/api/SimpleHttpTrigger") {
+    if (url.pathname === "/api/simplehttptrigger") {
       const userAgent = req.headers.get("user-agent");
       console.log(`user agent is: ${userAgent}`);
     

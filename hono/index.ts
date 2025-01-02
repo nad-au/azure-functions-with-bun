@@ -3,7 +3,7 @@ import { type Serve } from "bun";
 
 const app = new Hono().basePath("/api");
 
-app.get("/SimpleHttpTrigger", (c) => {
+app.get("/simplehttptrigger", (c) => {
   const userAgent = c.req.header("user-agent");
   console.log(`user agent is: ${userAgent}`);
 
