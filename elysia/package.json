@@ -1,12 +1,13 @@
 {
-  "name": "azure-functions-bun-serve",
+  "name": "azure-functions-bun-elysia",
   "module": "index.ts",
   "type": "module",
   "scripts": {
     "dev": "func start"
   },
   "dependencies": {
-    "bun": "latest"
+    "bun": "latest",
+    "elysia": "^1.2.9"
   },
   "devDependencies": {
     "@types/bun": "latest"

@@ -1,13 +1,18 @@
-# Azure Functions on Bun.js
+# Azure Functions on Bun.js using ElysiaJs
 
-Examples for running Azure Functions on Bun.js
+This example uses [ElysiaJs](https://elysiajs.com/)
 
-## Code
+## Requirements
 
-| Name | Description | Link |
-|------|-------------|------|
-| Bun Serve | This example uses Bun's built-in HTTP server through [Bun.serve](https://bun.sh/docs/api/http#bun-serve) | [README](./bun-serve/README.md) |
-| ElysiaJs  | This example uses [ElysiaJs](https://elysiajs.com/) | [README](./elysia/README.md) |
+1. Install [Bun](https://bun.sh/docs/installation)
+2. Install [Azure Functions Core Tools](https://learn.microsoft.com/en-us/azure/azure-functions/functions-run-local)
+
+## Start Function locally
+
+```bash
+bun install
+bun dev
+```
 
 ## Ref
 
@@ -26,4 +31,3 @@ https://github.com/Azure/azure-functions-host/wiki/host.json-(v2)
 
 ## Sample:
 - https://github.com/Azure-Samples/functions-custom-handlers
-

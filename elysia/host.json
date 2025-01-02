@@ -1,0 +1,31 @@
+{
+    "version": "2.0",
+    "extensionBundle": {
+        "id": "Microsoft.Azure.Functions.ExtensionBundle",
+        "version": "[4.*, 5.0.0)"
+    },
+    "extensions": {
+        "http": {
+            "routePrefix": "api"
+        }
+    },
+    "logging": {
+        "logLevel": {
+            "default": "Information",
+            "Host.Aggregator": "Warning",
+            "Host.Results": "Warning",
+            "Function": "Warning",
+            "Worker": "Information"
+        }
+    },
+    "customHandler": {
+        "description": {
+            "defaultExecutablePath": "node_modules/.bin/bun",
+            "arguments": [
+                "--watch",
+                "index.ts"
+            ]
+        },
+        "enableForwardingHttpRequest": true
+    }
+}
