@@ -1,5 +1,8 @@
+const port = parseInt(process.env.FUNCTIONS_CUSTOMHANDLER_PORT || "4000")
+console.log(`Listening on port: ${port}`)
+
 Bun.serve({
-  port: parseInt(process.env.FUNCTIONS_CUSTOMHANDLER_PORT || "4000"),
+  port,
   fetch(req) {
     const url = new URL(req.url);
     if (url.pathname === "/api/SimpleHttpTrigger") {

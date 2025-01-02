@@ -1,5 +1,8 @@
 import { Elysia } from 'elysia'
 
+const port = parseInt(process.env.FUNCTIONS_CUSTOMHANDLER_PORT || "4000")
+console.log(`Listening on port: ${port}`)
+
 new Elysia({ prefix: '/api' })
   .get('/SimpleHttpTrigger', ({ headers }) => {
     const userAgent = headers["user-agent"];
@@ -10,4 +13,4 @@ new Elysia({ prefix: '/api' })
 
     return 'Hello World from Elysia'
   })
-  .listen(parseInt(process.env.FUNCTIONS_CUSTOMHANDLER_PORT || "4000"))
+  .listen(port)
