@@ -4,3 +4,5 @@ __blobstorage**
 __queuestorage**
 
 node_modules
+out
+**/app

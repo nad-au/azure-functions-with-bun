@@ -3,7 +3,9 @@
   "module": "index.ts",
   "type": "module",
   "scripts": {
-    "dev": "func start"
+    "dev": "func start",
+    "build": "bun build ./index.ts --compile --outfile app",
+    "deploy": "rm -rf out && mkdir out && cp -r SimpleHttpTrigger app host.json out && pushd out && func azure functionapp publish func-dev-func-neil --custom && popd"
   },
   "dependencies": {
     "bun": "latest",
