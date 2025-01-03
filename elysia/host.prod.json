@@ -20,11 +20,7 @@
     },
     "customHandler": {
         "description": {
-            "defaultExecutablePath": "node_modules/.bin/bun",
-            "arguments": [
-                "--watch",
-                "index.ts"
-            ]
+            "defaultExecutablePath": "app"
         },
         "enableForwardingHttpRequest": false
     }
