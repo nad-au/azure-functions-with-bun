@@ -16,6 +16,14 @@ bun install
 bun dev
 ```
 
+## Deploy
+
+```bash
+bun install
+bun run build
+bun run deploy
+```
+
 ## Ref
 
 https://techcommunity.microsoft.com/t5/apps-on-azure-blog/building-serverless-go-applications-with-azure-functions-custom/ba-p/3623617
