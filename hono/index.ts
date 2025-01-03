@@ -19,7 +19,7 @@ app.post("name-check", async (c) => {
     return c.json({
       Outputs: {
         res: {
-          statusCode: "200",
+          statusCode: 200,
           body: "Correct answer. Bun FTW!!",
         },
       }
@@ -28,7 +28,7 @@ app.post("name-check", async (c) => {
   return c.json({
     Outputs: {
       res: {
-        statusCode: "400",
+        statusCode: 400,
         body: `No, best not use ${name}`,
       },
     }

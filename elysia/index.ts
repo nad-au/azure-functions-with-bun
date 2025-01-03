@@ -1,4 +1,5 @@
-import { Elysia } from 'elysia'
+import { Elysia, t } from 'elysia'
+import { inputBindingSchema, outputBindingSchema } from './schema';
 
 const port = parseInt(process.env.FUNCTIONS_CUSTOMHANDLER_PORT || "4000")
 console.log(`Listening on port: ${port}`)
@@ -14,13 +15,12 @@ new Elysia()
     const invocationId = headers["x-azure-functions-invocationid"];
     console.log(`invocationid is: ${invocationId}`);
 
-    const anyBody = body as any;
-    const name = anyBody.Data.req.Params.name ?? 'nothing';
+    const name = body.Data.req.Params.name ?? 'nothing';
     if (name === "bun") {
       return {
         Outputs: {
           res: {
-            statusCode: "200",
+            statusCode: 200,
             body: "Correct answer. Bun FTW!!",
           },
         }
@@ -29,10 +29,13 @@ new Elysia()
     return {
       Outputs: {
         res: {
-          statusCode: "400",
+          statusCode: 400,
           body: `No, best not use ${name}`,
         },
       }
     };
+  }, {
+    body: inputBindingSchema,
+    response: outputBindingSchema
   })
   .listen(port)

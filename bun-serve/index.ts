@@ -15,13 +15,13 @@ Bun.serve({
     
       const invocationId = req.headers.get("x-azure-functions-invocationid");
       console.log(`invocationid is: ${invocationId}`);
-      
+
       const name = body.Data.req.Params.name ?? 'nothing';
       if (name === "bun") {
         return Response.json({
           Outputs: {
             res: {
-              statusCode: "200",
+              statusCode: 200,
               body: "Correct answer. Bun FTW!!",
             },
           }
@@ -30,7 +30,7 @@ Bun.serve({
       return Response.json({
         Outputs: {
           res: {
-            statusCode: "400",
+            statusCode: 400,
             body: `No, best not use ${name}`,
           },
         }
@@ -39,7 +39,7 @@ Bun.serve({
     return Response.json({
       Outputs: {
         res: {
-          statusCode: "404",
+          statusCode: 404,
           body: "Not Found!!!",
         },
       }
