@@ -13,6 +13,13 @@
       "type": "http",
       "direction": "out",
       "name": "res"
+    },
+    {
+      "type": "queue",
+      "direction": "out",
+      "name": "out",
+      "queueName": "order-queue",
+      "connection": "STORAGE_CONNECTION"
     }
   ]
 }

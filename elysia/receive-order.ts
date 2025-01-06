@@ -1,8 +1,8 @@
 import { Elysia } from 'elysia'
 import { Value } from "@sinclair/typebox/value";
-import { inputBindingSchema, orderOutputBindingSchema, productOrderSchema } from './schema';
+import { orderInputBindingSchema, orderOutputBindingSchema } from './schema';
 
-export const order = new Elysia()
+export const receiveOrder = new Elysia()
   .onError(({ code, error, set }) => {
     if (code === 'VALIDATION') {
       set.status = 200
@@ -17,15 +17,19 @@ export const order = new Elysia()
     }
   })
   // Matches endpoint directory name
-  .post('/order', ({ body }) => {
-    console.log('body', JSON.stringify(body));
+  .derive(({ body }) => {
+    return {
+      binding: Value.Parse(orderInputBindingSchema, body)
+    }
+  })
+  .post('/order', ({ binding }) => {
+    console.log('body', binding);
 
-    const { Body } = body.Data.req;
-    const productOrder = Value.Parse(productOrderSchema, Body);
-    console.log('productOrder.Qty', productOrder.quantity);
+    const { Body: productOrder } = binding.Data.req;
 
     return {
       Outputs: {
+        out: productOrder,
         res: {
           Headers: { 'Content-Type': 'application/json' },
           body: { message: 'Order received', quantity: productOrder.quantity },
@@ -33,6 +37,5 @@ export const order = new Elysia()
       },
     };
   }, {
-    body: inputBindingSchema,
     response: orderOutputBindingSchema
   })

@@ -19,11 +19,12 @@ export const orderItemSchema = t.Object({
     quantity: t.Number(),
 })
 
-export const productOrderSchema = t.Transform(t.String())
-    .Decode(value => {
-        const json = JSON.parse(value)
-        return Value.Parse(orderItemSchema, json)
-    })
+export const transformProductOrder = t.Transform(t.String())
+    .Decode(value => Value.Parse(orderItemSchema, JSON.parse(value)))
+    .Encode(value => JSON.stringify(value))
+
+export const transformDoubleParseProductOrder = t.Transform(t.String())
+    .Decode(value => Value.Parse(orderItemSchema, JSON.parse(JSON.parse(value))))
     .Encode(value => JSON.stringify(value))
 
 export type HttpInputBinding = Static<typeof httpInputMetadataSchema>
@@ -34,7 +35,7 @@ export const httpInputBindingSchema = t.Object({
     Headers: t.Record(t.String(), t.Array(t.String())),
     Params: t.Record(t.String(), t.Nullable(t.String())),
     Identities: t.Array(identitySchema),
-    Body: t.Optional(t.String()),
+    Body: transformProductOrder,
 })
 
 export type HttpInputMetadata = Static<typeof httpInputMetadataSchema>
@@ -65,14 +66,31 @@ export const httpOutputBindingSchema = t.Object({
 export type OutputBinding = Static<typeof outputBindingSchema>
 export const outputBindingSchema = t.Object({
     message: t.Optional(t.String()),
-    Outputs: t.Optional(t.Record(t.String(), httpOutputBindingSchema)),
+    Outputs: t.Optional(t.Record(t.String(), t.Union([httpOutputBindingSchema, t.String()]))),
     Logs: t.Optional(t.Nullable((t.Array(t.String())))),
     ReturnValue: t.Optional(t.Nullable(t.String())),
+})
+
+export type OrderInputBinding = Static<typeof orderInputBindingSchema>
+export const orderInputBindingSchema = t.Object({
+    Data: t.Object({
+        req: t.Object({
+            Url: t.String(),
+            Method: t.Union([t.Literal('GET'), t.Literal('POST')]),
+            Query: t.Record(t.String(), t.Nullable(t.String())),
+            Headers: t.Record(t.String(), t.Array(t.String())),
+            Params: t.Record(t.String(), t.Nullable(t.String())),
+            Identities: t.Array(identitySchema),
+            Body: transformProductOrder,
+        })
+    }),
+    Metadata: httpInputMetadataSchema,
 })
 
 export type OrderOutputBinding = Static<typeof outputBindingSchema>
 export const orderOutputBindingSchema = t.Object({
     Outputs: t.Object({
+        out: orderItemSchema,
         res: t.Object({
             Headers: t.Record(t.Literal('Content-Type'), t.Literal('application/json')),
             body: t.Object({
@@ -81,4 +99,12 @@ export const orderOutputBindingSchema = t.Object({
             })
         }),
     })
+})
+
+export type OrderProcessInputBinding = Static<typeof orderProcessInputBindingSchema>
+export const orderProcessInputBindingSchema = t.Object({
+    Data: t.Object({
+        in: transformDoubleParseProductOrder
+    }),
+    Metadata: t.Object({}),
 })

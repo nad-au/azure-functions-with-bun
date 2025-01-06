@@ -1,0 +1,18 @@
+{
+    "bindings": [
+        {
+            "name": "in",
+            "type": "queueTrigger",
+            "direction": "in",
+            "queueName": "order-queue",
+            "connection": "STORAGE_CONNECTION"
+        },
+        {
+            "name": "$return",
+            "type": "queue",
+            "direction": "out",
+            "queueName": "process-queue",
+            "connection": "STORAGE_CONNECTION"
+        }
+    ]
+}
