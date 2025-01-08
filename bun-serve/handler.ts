@@ -1,9 +1,9 @@
-import type { Static, StaticDecode, TSchema } from "@sinclair/typebox";
+import { TypeBoxError, type Static, type StaticDecode, type TSchema } from "@sinclair/typebox";
 import type { Logger } from "./logger";
 import { type Outputs } from "./schema";
 import { Err, Ok, type Result } from "ts-results-es";
 import type { ValueError } from "@sinclair/typebox/errors";
-import { Value } from "@sinclair/typebox/value";
+import { AssertError, TransformDecodeError, Value, ValueErrorType } from "@sinclair/typebox/value";
 
 export type Context<T extends unknown> = {
     headers: Headers;
@@ -24,12 +24,36 @@ export const pathNameEquals = (req: Request, pathname: string) => {
     return url.pathname === pathname;
 }
 
-export const validateAndParseSchema = async <Type extends TSchema, Output = StaticDecode<Type>, TResult extends Output = Output>(schema: TSchema, body: unknown): Promise<Result<TResult, ValueError[]>> => {
-    if (Value.Check(schema, body)) {
+export const validateAndParseSchema = <Type extends TSchema, Output = StaticDecode<Type>, TResult extends Output = Output>(schema: TSchema, body: unknown): Result<TResult, ValueError[]> => {
+    try {
         return Ok(Value.Parse(schema, body));
-    }
-    const iterator = Value.Errors(schema, body)
-    const errors = [...iterator]
+    } catch (e) {
+        if (e instanceof AssertError) {
+            const iterator = e.Errors()
+            const errors = [...iterator]
 
-    return Err(errors)
+            return Err(errors)
+        }
+        else if (e instanceof TransformDecodeError) {
+            const innerError = e.error
+            if (innerError instanceof AssertError) {
+                const iterator = innerError.Errors()
+                const errors = [...iterator]
+    
+                return Err(errors)    
+            }
+            return Err([{
+                type: ValueErrorType.Object,
+                schema: e.schema,
+                path: e.path,
+                value: e.value,
+                message: e.message,
+                errors: []
+            }])
+        }
+        else if (e instanceof TypeBoxError) {
+            throw new Error(`Unknown TypeBoxError: ${e.message}`, { cause: e })
+        }
+        throw e
+    }
 }
