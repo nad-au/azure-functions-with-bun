@@ -1,12 +1,7 @@
 import { Type, type StaticDecode } from "@sinclair/typebox";
-import { createStorageQueueInputBindings, type Outputs } from "../schema";
+import { createStorageQueueInputBindings, orderItemSchema, type Outputs } from "../schema";
 import { Value } from "@sinclair/typebox/value";
 import { pathNameEquals, validateAndParseSchema, type Handler } from "../handler";
-
-const orderItemSchema = Type.Object({
-    productId: Type.String(),
-    quantity: Type.Number(),
-})
 
 // Message is a stringified JSON object
 export const transformProductOrder = Type.Transform(Type.String())

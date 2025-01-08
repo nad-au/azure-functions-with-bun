@@ -1,12 +1,7 @@
 import { Type, type StaticDecode } from "@sinclair/typebox";
-import { baseHttpInputBindingSchema, createHttpInputBindings, type Outputs } from "../schema";
+import { baseHttpInputBindingSchema, createHttpInputBindings, orderItemSchema, type Outputs } from "../schema";
 import { Value } from "@sinclair/typebox/value";
 import { pathNameEquals, validateAndParseSchema, type Handler } from "../handler";
-
-const orderItemSchema = Type.Object({
-    productId: Type.String(),
-    quantity: Type.Number(),
-})
 
 const transformProductOrder = Type.Transform(Type.String())
     .Decode(value => Value.Parse(orderItemSchema, JSON.parse(value)))

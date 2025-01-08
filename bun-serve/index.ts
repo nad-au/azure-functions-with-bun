@@ -6,11 +6,9 @@ import { Router } from "./router";
 const port = parseInt(process.env.FUNCTIONS_CUSTOMHANDLER_PORT || "4000")
 console.log(`Listening on port: ${port}`)
 
-const routes = new Router([nameCheck, receiveOrder, processOrder]);
+const router = new Router([nameCheck, receiveOrder, processOrder]);
 
 Bun.serve({
   port,
-  async fetch(req) {
-    return routes.handle(req);
-  },
+  fetch: async (req) => router.handle(req)
 });

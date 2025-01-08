@@ -7,6 +7,7 @@ export class Router {
 
     async handle(req: Request): Promise<Response> {
         for (const handler of this.handlers) {
+            const key = handler.config?.defaultOutputKey ?? 'res'
             if (await handler.canHandle(req)) {
                 const body = await req.json();
                 const result = await handler.parse(body);
@@ -22,7 +23,7 @@ export class Router {
                 if (handler.config?.throwOnError) throw new Error(`Error parsing request: ${JSON.stringify(result.error)}`);
                 return Response.json({
                     Outputs: {
-                        res: {
+                        [key]: {
                             statusCode: 400,
                             headers: { 'Content-Type': 'application/json' },
                             body: {
@@ -34,13 +35,6 @@ export class Router {
                 });
             }
         }
-        return Response.json({
-            Outputs: {
-                res: {
-                    statusCode: 404,
-                    body: "Route not Found!!!",
-                },
-            }
-        });
+        throw new Error('Route not found');
     }
 }

@@ -1,9 +1,9 @@
 import { TypeBoxError, type Static, type StaticDecode, type TSchema } from "@sinclair/typebox";
+import { AssertError, TransformDecodeError, Value, ValueErrorType } from "@sinclair/typebox/value";
 import type { Logger } from "./logger";
 import { type Outputs } from "./schema";
 import { Err, Ok, type Result } from "ts-results-es";
 import type { ValueError } from "@sinclair/typebox/errors";
-import { AssertError, TransformDecodeError, Value, ValueErrorType } from "@sinclair/typebox/value";
 
 export type Context<T extends unknown> = {
     headers: Headers;
@@ -11,8 +11,13 @@ export type Context<T extends unknown> = {
     logger: Logger
 }
 
+/// dewdew
 export type Config = {
+    /** Should throw instead of returning error through HTTP response. Would typically set to true for non-http triggers */
     throwOnError?: boolean;
+    
+    /** Default output key to use when returning response. Default is 'res' */    
+    defaultOutputKey?: string;
 }
 
 export type Handler<T extends unknown> = {

@@ -120,3 +120,9 @@ export const createServiceBusInputBindings = <T extends TSchema>(dataSchema: T) 
     Data: dataSchema,
     Metadata: serviceBusInputMetadataSchema
 })
+
+export type OrderItem = Static<typeof orderItemSchema>
+export const orderItemSchema = Type.Object({
+    productId: Type.String(),
+    quantity: Type.Number(),
+})
