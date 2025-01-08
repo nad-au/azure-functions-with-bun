@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "func start",
     "build": "bun build ./index.ts --compile --outfile app",
-    "deploy": "rm -rf out && mkdir out && cp -r name-check receive-order app out && cp host.prod.json out/host.json && pushd out && func azure functionapp publish func-dev-func-neil --custom && popd"
+    "deploy": "rm -rf out && mkdir out && find . -name function.json | cpio -pdm  out/ && cp app out/ && cp host.prod.json out/host.json && pushd out && func azure functionapp publish func-dev-func-neil --custom && popd"
   },
   "dependencies": {
     "@sinclair/typebox": "^0.34.13",
