@@ -15,7 +15,7 @@
             "Host.Aggregator": "Warning",
             "Host.Results": "Warning",
             "Function": "Warning",
-            "Worker": "Information"
+            "Worker": "Warning"
         }
     },
     "customHandler": {

@@ -15,11 +15,11 @@
       "name": "res"
     },
     {
-      "name": "out",
-      "type": "serviceBus",
+      "type": "queue",
       "direction": "out",
-      "queueName": "orders",
-      "connection": "AzureServiceBusConnectionString"
+      "name": "out",
+      "queueName": "order-queue",
+      "connection": "STORAGE_CONNECTION"
     }
   ]
 }

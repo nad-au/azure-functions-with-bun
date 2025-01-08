@@ -2,17 +2,11 @@
     "bindings": [
         {
             "name": "in",
-            "type": "queueTrigger",
+            "type": "serviceBusTrigger",
             "direction": "in",
-            "queueName": "order-queue",
-            "connection": "STORAGE_CONNECTION"
-        },
-        {
-            "name": "$return",
-            "type": "queue",
-            "direction": "out",
-            "queueName": "process-queue",
-            "connection": "STORAGE_CONNECTION"
+            "queueName": "orders",
+            "connection": "AzureServiceBusConnectionString",
+            "autoComplete": true
         }
     ]
 }

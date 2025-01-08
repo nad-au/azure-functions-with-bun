@@ -6,9 +6,12 @@ export const processOrder = new Elysia()
   .derive(({ body }) => {
     return {
       binding: Value.Parse(orderProcessInputBindingSchema, body)
+      //binding: body
     }
   })
   // Matches endpoint directory name
   .post('/process', ({ binding }) => {
-    console.log('process:body', binding);
+    binding.Data.in.productId
+    console.log('process:body', JSON.stringify(binding));
+    return {}
   })

@@ -35,6 +35,7 @@ export const receiveOrder = new Elysia()
           body: { message: 'Order received', quantity: productOrder.quantity },
         },
       },
+      Logs: ['Order received', "Order quantity: " + productOrder.quantity],
     };
   }, {
     response: orderOutputBindingSchema

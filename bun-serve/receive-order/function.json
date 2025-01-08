@@ -5,6 +5,7 @@
       "authLevel": "anonymous",
       "direction": "in",
       "name": "req",
+      "route": "orders",
       "methods": [
         "post"
       ]
@@ -13,13 +14,6 @@
       "type": "http",
       "direction": "out",
       "name": "res"
-    },
-    {
-      "name": "out",
-      "type": "serviceBus",
-      "direction": "out",
-      "queueName": "orders",
-      "connection": "AzureServiceBusConnectionString"
     }
   ]
 }

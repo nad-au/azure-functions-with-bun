@@ -38,16 +38,62 @@ export const httpInputBindingSchema = t.Object({
     Body: transformProductOrder,
 })
 
+export type Sys = Static<typeof sysSchema>
+export const sysSchema = t.Object({
+    MethodName: t.String(),
+    UtcNow: t.String(),
+    RandGuid: t.String(),
+})
 export type HttpInputMetadata = Static<typeof httpInputMetadataSchema>
 export const httpInputMetadataSchema = t.Object({
     name: t.Optional(t.String()),
     Query: t.Record(t.String(), t.Nullable(t.String())),
     Headers: t.Record(t.String(), t.String()),
-    sys: t.Object({
-        MethodName: t.String(),
-        UtcNow: t.String(),
-        RandGuid: t.String(),
+    sys: sysSchema,
+})
+
+export type StorageQueueInputMetadata = Static<typeof storageQueueInputMetadataSchema>
+export const storageQueueInputMetadataSchema = t.Object({
+    DequeueCount: t.String(),
+    ExpirationTime: t.String(),
+    Id: t.String(),
+    InsertionTime: t.String(),
+    NextVisibleTime: t.String(),
+    PopReceipt: t.String(),
+    sys: sysSchema,
+})
+
+export type ServiceBusInputMetadata = Static<typeof serviceBusInputMetadataSchema>
+export const serviceBusInputMetadataSchema = t.Object({
+    MessageReceiver: t.Object({}),
+    MessageSession: t.Object({}),
+    MessageActions: t.Object({}),
+    SessionActions: t.Object({}),
+    ReceiveActions: t.Object({}),
+    Client: t.Object({
+        FullyQualifiedNamespace: t.String(),
+        IsClosed: t.Boolean(),
+        TransportType: t.Number(),
+        Identifier: t.String(),
     }),
+    DeliveryCount: t.String(),
+    LockToken: t.String(),
+    ExpiresAtUtc: t.String(),
+    ExpiresAt: t.String(),
+    EnqueuedTimeUtc: t.String(),
+    EnqueuedTime: t.String(),
+    MessageId: t.String(),
+    ContentType: t.String(),
+    SequenceNumber: t.String(),
+    ApplicationProperties: t.Object({
+        '$AzureWebJobsParentId': t.String(),
+        'Diagnostic-Id': t.String(),
+    }),
+    UserProperties: t.Object({
+        '$AzureWebJobsParentId': t.String(),
+        'Diagnostic-Id': t.String(),
+    }),
+    sys: sysSchema,
 })
 
 export type InputBinding = Static<typeof inputBindingSchema>
@@ -87,7 +133,7 @@ export const orderInputBindingSchema = t.Object({
     Metadata: httpInputMetadataSchema,
 })
 
-export type OrderOutputBinding = Static<typeof outputBindingSchema>
+export type OrderOutputBinding = Static<typeof orderOutputBindingSchema>
 export const orderOutputBindingSchema = t.Object({
     Outputs: t.Object({
         out: orderItemSchema,
@@ -98,7 +144,9 @@ export const orderOutputBindingSchema = t.Object({
                 quantity: t.Number(),
             })
         }),
-    })
+    }),
+    Logs: t.Optional(t.Nullable((t.Array(t.String())))),
+    ReturnValue: t.Optional(t.Nullable(t.String())),
 })
 
 export type OrderProcessInputBinding = Static<typeof orderProcessInputBindingSchema>
@@ -106,5 +154,5 @@ export const orderProcessInputBindingSchema = t.Object({
     Data: t.Object({
         in: transformDoubleParseProductOrder
     }),
-    Metadata: t.Object({}),
+    Metadata: storageQueueInputMetadataSchema,
 })

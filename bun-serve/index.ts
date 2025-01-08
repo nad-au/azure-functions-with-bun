@@ -1,48 +1,59 @@
+import type { Handler } from "./handler";
+import { AzureFunctionsCustomLogger } from "./logger";
+import { nameCheck } from "./name-check/name-check";
+import { receiveOrder } from "./receive-order/receive-order";
+
 const port = parseInt(process.env.FUNCTIONS_CUSTOMHANDLER_PORT || "4000")
 console.log(`Listening on port: ${port}`)
 
-Bun.serve({
-  port,
-  async fetch(req) {
-    const body = await req.json();
-    console.log('body', JSON.stringify(body));
+export class Router {
 
-    const url = new URL(req.url);
-    if (url.pathname === "/name-check")  // Matches endpoint directory name
-    {
-      const userAgent = req.headers.get("user-agent");
-      console.log(`user agent is: ${userAgent}`);
-    
-      const invocationId = req.headers.get("x-azure-functions-invocationid");
-      console.log(`invocationid is: ${invocationId}`);
+  constructor(private readonly handlers: Handler<any>[]) { }
 
-      const name = body.Data.req.Params.name ?? 'nothing';
-      if (name === "bun") {
+  async handle(req: Request): Promise<Response> {
+    for (const handler of this.handlers) {
+      if (await handler.canHandle(req)) {
+        const body = await req.json();
+        const result = await handler.parse(body);
+        if (result.isOk()) {
+          const logger = new AzureFunctionsCustomLogger();
+          const outputs = await handler.handle({ headers: req.headers, body: result.value, logger });
+          const logs = logger.get();
+          return Response.json({
+            Outputs: outputs,
+            Logs: logs,
+          });
+        }
         return Response.json({
           Outputs: {
             res: {
-              statusCode: 200,
-              body: "Correct answer. Bun FTW!!",
+              statusCode: 400,
+              headers: { 'Content-Type': 'application/json' },
+              body: {
+                type: 'validation',
+                errors: result.error,
+              },
             },
           }
         });
       }
-      return Response.json({
-        Outputs: {
-          res: {
-            statusCode: 400,
-            body: `No, best not use ${name}`,
-          },
-        }
-      });
     }
     return Response.json({
       Outputs: {
         res: {
           statusCode: 404,
-          body: "Not Found!!!",
+          body: "Route not Found!!!",
         },
       }
     });
+  }
+}
+
+const routes = new Router([nameCheck, receiveOrder]);
+
+Bun.serve({
+  port,
+  async fetch(req) {
+    return routes.handle(req);
   },
 });

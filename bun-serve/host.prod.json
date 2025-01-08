@@ -11,11 +11,11 @@
     },
     "logging": {
         "logLevel": {
-            "default": "Information",
+            "default": "Warning",
             "Host.Aggregator": "Warning",
-            "Host.Results": "Warning",
-            "Function": "Warning",
-            "Worker": "Information"
+            "Host.Results": "Information",
+            "Function": "Information",
+            "Worker": "Warning"
         }
     },
     "customHandler": {
