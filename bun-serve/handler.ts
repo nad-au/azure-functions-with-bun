@@ -11,8 +11,13 @@ export type Context<T extends unknown> = {
     logger: Logger
 }
 
+export type Config = {
+    throwOnError?: boolean;
+}
+
 export type Handler<T extends unknown> = {
     canHandle: (req: Request) => Promise<boolean>;
+    config?: Config;
     parse: <Type extends TSchema, Output = Static<Type>, TResult extends Output = Output> (body: unknown) => Promise<Result<TResult, ValueError[]>>;
     handle: (context: Context<T>) => Promise<Outputs>;
 }
@@ -39,8 +44,8 @@ export const validateAndParseSchema = <Type extends TSchema, Output = StaticDeco
             if (innerError instanceof AssertError) {
                 const iterator = innerError.Errors()
                 const errors = [...iterator]
-    
-                return Err(errors)    
+
+                return Err(errors)
             }
             return Err([{
                 type: ValueErrorType.Object,

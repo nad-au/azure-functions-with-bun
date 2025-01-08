@@ -22,7 +22,7 @@ export const receiveOrder: Handler<OrderReceiveInputs> = {
     canHandle: async (req: Request) => pathNameEquals(req, '/receive-order'),
     parse: async (body: unknown) => validateAndParseSchema(orderReceiveInputs, body),
     handle: async ({ body, logger }): Promise<Outputs> => {
-        await logger.log('receiveOrder:body', body);
+        await logger.log('receive-order:body', body);
 
         const { productId, quantity } = body.Data.req.Body;
 
@@ -33,7 +33,8 @@ export const receiveOrder: Handler<OrderReceiveInputs> = {
                 Headers: { 'Content-Type': 'application/json' },
                 statusCode: 200,
                 body: { message: `Order received for ${productId} qty ${quantity}` },
-            }
+            },
+            out: JSON.stringify(body.Data.req.Body)
         }
     }
 }

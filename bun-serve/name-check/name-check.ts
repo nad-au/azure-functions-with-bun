@@ -11,7 +11,7 @@ export const nameCheck: Handler<NameCheckInputs> = {
     canHandle: async (req: Request) => pathNameEquals(req, '/name-check'),
     parse: async (body: unknown) => validateAndParseSchema(nameCheckInputs, body),
     handle: async ({ body, logger }): Promise<Outputs> => {
-        console.log('body', body);
+        console.log('name-check:body', body);
 
         const name = body.Data.req.Params.name ?? 'nothing';
         if (name === "bun") {

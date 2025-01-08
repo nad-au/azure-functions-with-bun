@@ -108,3 +108,15 @@ export const createHttpInputBindings = <T extends TSchema>(dataSchema: T) => Typ
     Data: dataSchema,
     Metadata: httpInputMetadataSchema
 })
+
+export type StorageQueueInputBindings<T extends TSchema> = StaticDecode<ReturnType<typeof createStorageQueueInputBindings<T>>>
+export const createStorageQueueInputBindings = <T extends TSchema>(dataSchema: T) => Type.Object({
+    Data: dataSchema,
+    Metadata: storageQueueInputMetadataSchema
+})
+
+export type ServiceBusInputBindings<T extends TSchema> = StaticDecode<ReturnType<typeof createServiceBusInputBindings<T>>>
+export const createServiceBusInputBindings = <T extends TSchema>(dataSchema: T) => Type.Object({
+    Data: dataSchema,
+    Metadata: serviceBusInputMetadataSchema
+})
