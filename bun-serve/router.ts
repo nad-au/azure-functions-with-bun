@@ -35,6 +35,6 @@ export class Router {
                 });
             }
         }
-        throw new Error('Route not found');
+        return new Response('Not Found', { status: 404 });
     }
 }
