@@ -1,5 +1,5 @@
 import { Type, type Static } from "@sinclair/typebox";
-import { pathNameEquals, validateAndParseSchema, type Handler } from "../handler";
+import { pathNameEquals, validateAndParseSchema, validationErrorOutputs, type Handler } from "../handler";
 import { baseHttpInputBindingSchema, createHttpInputBindings, type Outputs } from "../schema";
 
 type NameCheckInputs = Static<typeof nameCheckInputs>
@@ -9,7 +9,10 @@ const nameCheckInputs = createHttpInputBindings(Type.Object({
 
 export const nameCheck: Handler<NameCheckInputs> = {
     canHandle: async (req: Request) => pathNameEquals(req, '/name-check'),
-    parse: async (body: unknown) => validateAndParseSchema(nameCheckInputs, body),
+    parse: async (body: unknown) =>
+        validateAndParseSchema(body, nameCheckInputs, (errors) =>
+            validationErrorOutputs(errors),
+        ),
     handle: async ({ body, logger }): Promise<Outputs> => {
         console.log('name-check:body', body);
 

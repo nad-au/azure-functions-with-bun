@@ -10,5 +10,5 @@ const router = new Router([nameCheck, receiveOrder, processOrder]);
 
 Bun.serve({
   port,
-  fetch: async (req) => router.handle(req)
+  fetch: async (req) => router.route(req)
 });

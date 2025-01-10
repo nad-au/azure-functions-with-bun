@@ -8,10 +8,15 @@ export interface Logger {
 }
 
 export class AzureFunctionsCustomLogger implements Logger {
+  constructor(
+    private readonly logLevel: string = process.env.LOG_LEVEL || 'info',
+  ) {}
   private readonly logs: string[] = []
 
   async log(message: string, ...args: unknown[]): Promise<void> {
-    this.logs.push(buildMessage(message, ...args))
+    if (['info', 'debug', 'trace'].includes(this.logLevel)) {
+      this.logs.push(buildMessage(message, ...args))
+    }
   }
 
   async error(message: string, ...args: unknown[]): Promise<void> {
@@ -19,19 +24,27 @@ export class AzureFunctionsCustomLogger implements Logger {
   }
 
   async warn(message: string, ...args: unknown[]): Promise<void> {
-    this.logs.push(buildMessage(message, ...args))
+    if (['warn', 'info', 'debug', 'trace'].includes(this.logLevel)) {
+      this.logs.push(buildMessage(message, ...args))
+    }
   }
 
   async info(message: string, ...args: unknown[]): Promise<void> {
-    this.logs.push(buildMessage(message, ...args))
+    if (['info', 'debug', 'trace'].includes(this.logLevel)) {
+      this.logs.push(buildMessage(message, ...args))
+    }
   }
 
   async debug(message: string, ...args: unknown[]): Promise<void> {
-    this.logs.push(buildMessage(message, ...args))
+    if (['debug', 'trace'].includes(this.logLevel)) {
+      this.logs.push(buildMessage(message, ...args))
+    }
   }
 
   async trace(message: string, ...args: unknown[]): Promise<void> {
-    this.logs.push(buildMessage(message, ...args))
+    if (['trace'].includes(this.logLevel)) {
+      this.logs.push(buildMessage(message, ...args))
+    }
   }
 
   clear(): void {
@@ -51,19 +64,4 @@ export const buildMessage = (message: string, ...args: unknown[]): string => {
     log += ` ${JSON.stringify(arg)}`
   }
   return log
-}
-
-export const NullLogger = (): Logger => {
-  return {
-    log: (message: string, ...args: unknown[]) => nop(message, ...args),
-    error: (message: string, ...args: unknown[]) => nop(message, ...args),
-    warn: (message: string, ...args: unknown[]) => nop(message, ...args),
-    info: (message: string, ...args: unknown[]) => nop(message, ...args),
-    debug: (message: string, ...args: unknown[]) => nop(message, ...args),
-    trace: (message: string, ...args: unknown[]) => nop(message, ...args),
-  }
-}
-
-const nop = (_message: string, ..._args: unknown[]): Promise<void> => {
-  return Promise.resolve()
 }

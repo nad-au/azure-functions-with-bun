@@ -1,7 +1,7 @@
 import { Type, type StaticDecode } from "@sinclair/typebox";
 import { baseHttpInputBindingSchema, createHttpInputBindings, orderItemSchema, type Outputs } from "../schema";
 import { Value } from "@sinclair/typebox/value";
-import { pathNameEquals, validateAndParseSchema, type Handler } from "../handler";
+import { pathNameEquals, validateAndParseSchema, validationErrorOutputs, type Handler } from "../handler";
 
 const transformProductOrder = Type.Transform(Type.String())
     .Decode(value => Value.Parse(orderItemSchema, JSON.parse(value)))
@@ -15,7 +15,10 @@ const orderReceiveInputs = createHttpInputBindings(Type.Object({
 
 export const receiveOrder: Handler<OrderReceiveInputs> = {
     canHandle: async (req: Request) => pathNameEquals(req, '/receive-order'),
-    parse: async (body: unknown) => validateAndParseSchema(orderReceiveInputs, body),
+    parse: async (body: unknown) =>
+        validateAndParseSchema(body, orderReceiveInputs, (errors) =>
+            validationErrorOutputs(errors),
+        ),
     handle: async ({ body, logger }): Promise<Outputs> => {
         await logger.log('receive-order:body', body);
 
@@ -29,7 +32,7 @@ export const receiveOrder: Handler<OrderReceiveInputs> = {
                 statusCode: 200,
                 body: { message: `Order received for ${productId} qty ${quantity}` },
             },
-            out: JSON.stringify(body.Data.req.Body)
+            out: body.Data.req.Body
         }
     }
 }

@@ -81,7 +81,7 @@ export const httpOutputBindingSchema = Type.Object({
 })
 
 export type Output = Static<typeof outputSchema>
-export const outputSchema = Type.Union([httpOutputBindingSchema, Type.String()])
+export const outputSchema = Type.Union([httpOutputBindingSchema, Type.Object({}), Type.String()])
 
 export type Outputs = Static<typeof outputsSchema>
 export const outputsSchema = Type.Record(Type.String(), outputSchema)
